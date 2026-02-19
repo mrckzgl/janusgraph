@@ -960,11 +960,15 @@ public class LuceneIndex implements IndexProvider {
     }
 
     private long executeCount(IndexSearcher searcher, Query query) throws IOException {
+        //System.out.println("executeCount");
+        //Thread.dumpStack();
         final long time = System.currentTimeMillis();
         // We ignore offset and limit for totals
-        final TopDocs docs = searcher.search(query, 1);
+        final long count = (long) searcher.count(query);
+        // final TopDocs docs = searcher.search(query, 1);
         log.debug("Executed query [{}] in {} ms", query, System.currentTimeMillis() - time);
-        return docs.totalHits.value;
+        return count;
+        //return docs.totalHits.value;
     }
 
     private SortField.Type sortFieldType(Class fieldType) {
@@ -1028,10 +1032,11 @@ public class LuceneIndex implements IndexProvider {
             if (searcher == null) return 0L; //Index does not yet exist
 
             final long time = System.currentTimeMillis();
-            // Lucene doesn't like limits of 0.  Also, it doesn't efficiently build a total list.
-            final TopDocs docs = searcher.search(q, 1);
+            //final TopDocs docs = searcher.search(q, 1);
+            final long count = searcher.count(q);
             log.debug("Executed query [{}] in {} ms", q, System.currentTimeMillis() - time);
-            return QueryUtil.applyOffsetWithQueryLimitAfterCount(docs.totalHits.value, query.getOffset(), query);
+            return QueryUtil.applyOffsetWithQueryLimitAfterCount(count, query.getOffset(), query);
+            //return QueryUtil.applyOffsetWithQueryLimitAfterCount(docs.totalHits.value, query.getOffset(), query);            
         } catch (final IOException e) {
             throw new TemporaryBackendException("Could not execute Lucene query", e);
         }
