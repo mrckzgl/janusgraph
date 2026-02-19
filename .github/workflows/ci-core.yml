@@ -38,7 +38,8 @@ on:
 env:
   BUILD_MAVEN_OPTS: "-DskipTests=true --batch-mode --also-make"
   VERIFY_MAVEN_OPTS: "-Pcoverage"
-
+  DOCKER_API_VERSION: "1.44"
+  
 jobs:
   build-all:
     runs-on: ubuntu-22.04
