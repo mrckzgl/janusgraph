@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: CI Core
+name: CI Lucene Test
 
 on:
   pull_request:
@@ -54,4 +54,5 @@ jobs:
         with:
           java-version: 8
           distribution: zulu
+      - run: mvn clean install -DskipTests=true
       - run: mvn -Dsurefire.failIfNoSpecifiedTests=false -Dtest=org.janusgraph.diskstorage.lucene.BerkeleyLuceneTest test -pl janusgraph-lucene -pl janusgraph-backend-testutils -pl janusgraph-core
